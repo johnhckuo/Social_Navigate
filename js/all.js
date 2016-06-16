@@ -432,45 +432,7 @@ var disaster = function(type,button){
         $("#chart table:nth-child(2)").css("right",'-70px');
         earthquakeTransition(circles,radius);
         
-   /*    for (var i  = 0 ; i < data.length ; i++){
-          var latitude = data[i].latitude.text;
-          var longitude = data[i].longitude.text;
-          var mag = data[i].mag.text;
 
-        //  var xy = mapTopixel(latitude,longitude);
-          var xy = mapTopixel(  latitude,longitude);
-          var x = xy[0];
-          var y = xy[1];
-          console.log(x+'/'+y);
-          d3.select("svg").selectAll("circle").data(data).enter()
-           .append("circle")
-           .attr({
-              r:10,
-              cx:x,
-              cy:y-65,
-              stroke: "red", // 畫紅圈
-              fill: "none"   // 紅圈不填滿
-            });
-          
-       } */
-
-  /*      var color = d3.scale.pow().domain([0,9]).range(["#00DD00","#CC0000"]);
-        var path = d3.geo.path().projection( // 路徑產生器
-    d3.geo.mercator().center([121,24]).scale(scale) // 座標變換函式
-  );
-        for (var i = 0; i < data.length ; i++){
-          $('path').each(function() {
-            
-            if ($(this).attr( "name" ) == data[i].county){
-
-              $(this).attr("fill", color(data[i].mag));
-                
-              }
-            })
-        } */
-
-
-           // $('#container').append("<li>"+"<span>"+str[i].Title+"</span></li>");
             
          }
       });
