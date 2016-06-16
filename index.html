@@ -10,7 +10,7 @@
 
 	<script type="text/javascript" src="http://d3js.org/topojson.v1.min.js"></script>
 	<link rel="stylesheet" href="css/all.css">
-	
+	<script src="js/utils.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/bootstrap.css" rel="stylesheet">
 	
@@ -80,7 +80,7 @@
             //responsive code end
         });
     </script>
-
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
 
 </head>
 <body>
@@ -92,9 +92,7 @@
 	    </div>
 	    <ul class="nav navbar-nav">
 	      <li class="active"><a href="#">Home</a></li>
-	      <li><a href="#">Page 1</a></li>
-	      <li><a href="#">Page 2</a></li> 
-	      <li><a href="#">Page 3</a></li> 
+
 	    </ul>
 	  </div>
 	</nav>
@@ -102,6 +100,30 @@
 	<div class="singlepage-container">
 
     <div class="p01">	
+    	<div id="sliderBG" >
+    		
+			<section class="container">
+				<div id="sliderTitle">Top 5 關鍵字</div>
+			    <div id="carousel">
+			      <figure></figure>
+			      <figure></figure>
+			      <figure></figure>
+			      <figure></figure>
+			      <figure></figure>
+	
+			    </div>
+		  </section>
+			  <section id="options">
+			    <p id="navigation">
+			    	<a onclick="sliderHide()">Exit</a>
+			      <button id="previous" data-increment="-1">Previous</button>
+			      <button id="next" data-increment="1">Next</button>
+			    </p>
+
+			  </section>
+
+
+    	</div>
 	    <div id="slider">
 
 		    <div id="jssor_1" style="position: relative; margin: 0 auto; top: 0px; left: 0px; width: 1300px; height: 600px; overflow: hidden; visibility: hidden;">
@@ -112,17 +134,18 @@
 		        </div>
 		        <div id="jssor_2" data-u="slides" style="cursor: default; position: relative; top: 0px; left: 0px; width: 1300px; height: 600px; overflow: hidden;">
 		            <div data-p="225.00" style="display: none;">
-		                <img data-u="image" src="img/p03.jpg" />
-		                
-		            </div>
-		            <div data-b="0" data-p="225.00" style="display: none;">
-		                <img data-u="image" src="img/p02.jpg" />
+		            	<div id='mainButton'>
+		            		<span>悠閒的一天<br />想去&nbsp<input type='text' size="4" id="place" onchange="updateInput(this.value)">&nbsp逛逛嗎？</span>
+							<a href="#" class="mainButton" onclick="randomQuery()">
+						  	<span>給點建議吧</span>
+							</a>
+		            	</div>
 
-		            </div>
-		            <div data-b="1" data-p="225.00" data-po="80% 55%" style="display: none;">
-		                <img data-u="image" src="img/p01.jpg" />
+
+		                <img data-u="image" src="img/p02.jpg" />
 		                
 		            </div>
+
 		  
 		        
 		        </div>

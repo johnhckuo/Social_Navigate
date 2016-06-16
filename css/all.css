@@ -185,6 +185,18 @@ a {
 	padding:100px;
 	color:white;
 }
+
+#sliderBG{
+	position: absolute;
+	background-color:rgba(0,0,0,0.8);
+
+	height: 100vh;
+	width: 100vw;
+	z-index: 100;
+	padding:100px;
+	color:white;
+	top:10px;
+}
 #articleContent table{
 	text-align: center;
 	-webkit-touch-callout: none; /* iOS Safari */
@@ -464,3 +476,192 @@ input[type=range]:focus::-ms-fill-upper {
   background: #ac51b5;
 }
 
+@import url(http://fonts.googleapis.com/css?family=Nunito:300);
+
+body { font-family: "Nunito", sans-serif; font-size: 24px; }
+a    { text-decoration: none; }
+p    { text-align: center; }
+sup  { font-size: 36px; font-weight: 100; line-height: 55px; }
+
+#place{
+	background: transparent;
+    border: none;
+}
+
+#mainButton{
+	position: relative;
+	z-index: 1000;
+	top:150px;
+}
+
+#mainButton > span{
+	text-align: center;
+
+    margin: 0.0em auto;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    font-size: 36px;
+}
+.mainButton
+{
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  color: #000;
+
+  font-size: 24px;
+  font-family: "微軟正黑體";
+  font-weight: 300;
+  
+  margin: 5em auto;
+  
+  position: absolute; 
+  top:0; right:0; bottom:0; left:0;
+  
+  padding: 50px 0;
+  padding-top:20px;
+  width: 220px;
+  height:30px;
+
+  border: 2px solid #000;
+
+  overflow: hidden;
+  
+  transition: all 0.5s;
+}
+
+.mainButton:hover, .mainButton:active 
+{
+  text-decoration: none;
+  color: #fff;
+  border-color: #000;
+  background: #000;
+}
+
+.mainButton span 
+{
+  display: inline-block;
+  position: relative;
+  padding-right: 0;
+  
+  transition: padding-right 0.5s;
+}
+
+.mainButton span:after 
+{
+  content: ' ';  
+  position: absolute;
+  top: 0;
+  right: -18px;
+  opacity: 0;
+  width: 10px;
+  height: 10px;
+  margin-top: -10px;
+
+  background: rgba(0, 0, 0, 0);
+  border: 3px solid #FFF;
+  border-top: none;
+  border-right: none;
+
+  transition: opacity 0.5s, top 0.5s, right 0.5s;
+  transform: rotate(-45deg);
+}
+
+.mainButton:hover span, .mainButton:active span 
+{
+  padding-right: 30px;
+}
+
+.mainButton:hover span:after, .mainButton:active span:after 
+{
+  transition: opacity 0.5s, top 0.5s, right 0.5s;
+  opacity: 1;
+  border-color: #0C5;
+  right: 0;
+  top: 50%;
+}
+
+ .container {
+      width: 210px;
+      height: 140px;
+      position: relative;
+      margin: 0 auto 40px;
+      top:150px;
+      -webkit-perspective: 1100px;
+         -moz-perspective: 1100px;
+           -o-perspective: 1100px;
+              perspective: 1100px;
+    }
+
+#options{
+	position: relative;
+	top:250px;
+	
+}
+#options button{
+		background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+#carousel {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  -webkit-transform-style: preserve-3d;
+     -moz-transform-style: preserve-3d;
+       -o-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+transform-origin:150px 20px;
+left:400px;
+}
+
+.ready #carousel {
+  -webkit-transition: -webkit-transform 1s;
+     -moz-transition: -moz-transform 1s;
+       -o-transition: -o-transform 1s;
+          transition: transform 1s;
+}
+
+#carousel.panels-backface-invisible figure {
+  -webkit-backface-visibility: hidden;
+     -moz-backface-visibility: hidden;
+       -o-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+#carousel figure {
+  display: block;
+  position: absolute;
+  width: 210px;
+  height: 100px;
+  left: 10px;
+  top: 10px;
+  line-height: 116px;
+  font-size: 80px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  border:1px white solid;
+  font-size: 50px;
+
+}
+
+.ready #carousel figure {
+  -webkit-transition: opacity 1s, -webkit-transform 1s;
+     -moz-transition: opacity 1s, -moz-transform 1s;
+       -o-transition: opacity 1s, -o-transform 1s;
+          transition: opacity 1s, transform 1s;
+}
+#sliderTitle{
+	text-align: center;
+    font-size: 60px;
+    top: -100px;
+    position: relative;
+}

@@ -4,11 +4,18 @@ var data;
 var sectorArticleNumber = [];
 var sectorArticleSector = [];
 var fileArray = ["台東","台北","台中","台南","宜蘭","花蓮","南投","屏東","苗栗","桃園","馬祖","高雄","基隆","新北","連江","雲林","新竹","嘉義","彰化","澎湖"]
+var dynamicArray=["台東", "高雄", "台中", "台東", "台北"]
+var dynamicCount =0;
 var sectorCount = 0;
 var scale = 12500;
 var totalMonth = 5;
 var currentType = 0;
 var typeArray = ['美食','旅遊']
+var geocoder;
+var currentCity;
+var randomClickCount = 0;
+var lastCity = '';
+var chart1DataPoint = [];
 $(document).ready(function(){
 
 $(".footer_time").hover(function(){
@@ -19,8 +26,8 @@ $(".footer_time").hover(function(){
 drawTaiwan()
 $("#monthText").html(currentMonth+"月份");
 $("#typeText").html(typeArray[currentType]);
-$("#bg").fadeOut(1000);
-
+$("#bg").hide();
+$("#sliderBG").hide();
 var cloudFile = new XMLHttpRequest();
 cloudFile.open("GET", "cloud/台北市.json", true);
 cloudFile.onreadystatechange = function ()
@@ -57,9 +64,78 @@ cloudFile.send(null);
 drawCanvas();
 
 sectorArticle(currentMonth, typeArray[currentType])
+accessLocation();
 
+var carousel = document.getElementById('carousel'),
+    navButtons = document.querySelectorAll('#navigation button'),
+    panelCount = carousel.children.length,
+    transformProp = Modernizr.prefixed('transform'),
+    theta = 0,
+
+    onNavButtonClick = function( event ){
+      var increment = parseInt( event.target.getAttribute('data-increment') );
+      theta += ( 360 / panelCount ) * increment * -1;
+      carousel.style[ transformProp ] = 'translateZ( -288px ) rotateY(' + theta + 'deg)';
+    };
+
+for (var i=0; i < 2; i++) {
+  navButtons[i].addEventListener( 'click', onNavButtonClick, false);
+}
 });
 
+
+function accessLocation(){
+  if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+  } 
+  geocoder = new google.maps.Geocoder();
+}
+  
+//Get the latitude and the longitude;
+function successFunction(position) {
+    var lat = position.coords.latitude;
+    var lng = position.coords.longitude;
+    codeLatLng(lat, lng)
+}
+
+function errorFunction(){
+    alert("Geocoder failed");
+}
+
+
+function codeLatLng(lat, lng) {
+
+  var latlng = new google.maps.LatLng(lat, lng);
+  geocoder.geocode({'latLng': latlng}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+    //console.log(results)
+      if (results[1]) {
+       //formatted address
+       //alert(results[0].formatted_address)
+      //find country name
+           for (var i=0; i<results[0].address_components.length; i++) {
+          for (var b=0;b<results[0].address_components[i].types.length;b++) {
+
+          //there are different types that might hold a city admin_area_lvl_1 usually does in come cases looking for sublocality type will be more appropriate
+              if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
+                  //this is the object you are looking for
+                  city= results[0].address_components[i];
+                  break;
+              }
+          }
+      }
+      //city data
+      //alert(city.short_name + " " + city.long_name)
+      currentCity = city.short_name;
+      $("#place").attr("value",currentCity);
+      } else {
+        alert("No results found");
+      }
+    } else {
+      alert("Geocoder failed due to: " + status);
+    }
+  });
+}
 function showVal(value, type){
   if (type == "month"){
     switch(value){
@@ -100,6 +176,57 @@ function showVal(value, type){
   sectorArticle(currentMonth, typeArray[currentType]);
 }
 
+
+function updateInput(ish){
+    $("#place").attr("value", ish);
+}
+
+function randomQuery(type){
+
+  var city = $("#place").attr("value").substring(0,2);
+  if (city != lastCity){
+    randomClickCount =0;
+  }
+  lastCity = city
+ 
+  var d = new Date();
+  var month = d.getMonth();
+
+    var frequency = [];
+
+
+    var file = "data/關鍵詞/"+city+".json";
+    
+    var rawFile = new XMLHttpRequest();
+          
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                //console.log(allText);
+                
+                
+
+                ajaxFile = JSON.parse(allText)
+                for (var i = 0 ; i < 5 ; i ++){
+                  $("figure:nth-child("+(i+1)+")").html(ajaxFile[i].word)  ;  
+                }
+                //alert(ajaxFile[randomClickCount++].word)
+                randomClickCount++
+                $("#sliderBG").fadeIn(1000);
+              
+            }
+        }
+    }
+    
+    rawFile.send(null);
+
+}
 
 function drawTaiwan(){
 	var type='county';
@@ -217,6 +344,15 @@ function sectorArticle(month, type){
                 color = 'yellow';
               else if (temp>0)
                 color = 'green' ;
+              //   color = '#B2BD7E';
+              // else if (temp>0.09)
+              //   color = '#F6FEAA';
+              // else if (temp>0.05)
+              //   color = '#ECFEE8';
+              // else if (temp>0.01)
+              //   color = '#B9FAF8';
+              // else if (temp>0)
+              //   color = '#93E1D8' ;
 
               $('[name="'+sectorArticleSector[i]+'"]').attr("fill", color);
 
@@ -255,41 +391,6 @@ function sectorArticle(month, type){
                 sectorArticleSector.push(fileArray[sectorCount]);
                 sectorArticleNumber.push(ajaxFile.length);
 
-  //      // var color = d3.scale.linear().domain([0,10]).range(["#CCEEFF","#770077"]);
-  //       var path = d3.geo.path().projection( // 路徑產生器
-  //   d3.geo.mercator().center([121,24]).scale(scale) // 座標變換函式
-  // );
-  //       for (var i = 0; i < data.length ; i++){
-  //         $('path').each(function() {
-            
-  //           if ($(this).attr( "name" ) == data[i].county){
-  //             if (data[i].rainfall>25)
-  //               $(this).attr("fill", '#770077');
-  //             else if (data[i].rainfall>20)
-  //               $(this).attr("fill", '#003377');
-  //             else if (data[i].rainfall>15)
-  //               $(this).attr("fill", '#220088');
-  //             else if (data[i].rainfall>10)
-  //               $(this).attr("fill", '#0000FF');
-  //             else if (data[i].rainfall>5)
-  //               $(this).attr("fill", '#009FCC');
-  //             else if (data[i].rainfall>0)
-  //               $(this).attr("fill", '#33CCFF');
-  //             else if (data[i].rainfall == '-')
-  //               $(this).attr("fill", '#ffffff' );
-            
-              
-  //             }
-  //           })
-  //       }
-
-
-            
-
-  //     $("#chart").html($('#rain').html())
-  //     $("#chart table").css("width",'300px');
-  //     $("#chart table:nth-child(2)").css("right",'80px');
-  //     $("#chart td:nth-child(2)").css({"width":'100px','padding':'5px'});
               sectorCount++;
               sectorArticle(month, type);
               
@@ -312,7 +413,10 @@ function hide(){
   $("#bg").fadeOut(1000);
 
 }
+function sliderHide(){
 
+  $("#sliderBG").fadeOut(1000);
+}
 function parseCSV(inputFile) {
   var isInputANSI = true;
   var fileReader = new FileReader();
@@ -406,7 +510,53 @@ $("#articleContent").append(table);
 
 
 
+function dynamicDiagram(city){
+  if (city == dynamicArray.length-1){
+    if (month == 5){
+      return;
+    }else{
+      month++;
+      city = 0;
+    }
+ 
+  }
 
+  var file = "data/travel/"+month+"/"+dynamicArray[city]+".json";
+  
+  var rawFile = new XMLHttpRequest();
+        
+  rawFile.open("GET", file, true);
+
+  rawFile.onreadystatechange = function ()
+  {
+      if(rawFile.readyState === 4)
+      {
+
+          if(rawFile.status === 200 || rawFile.status == 0)
+          {
+              var allText = rawFile.responseText;
+              //console.log(allText);
+              
+              
+
+              ajaxFile = JSON.parse(allText)
+              //console.log(ajaxFile[0])
+              //console.log(ajaxFile.length)
+              sectorArticleSector.push(fileArray[sectorCount]);
+              sectorArticleNumber.push(ajaxFile.length);
+
+              chart1DataPoint
+            sectorCount++;
+            city++;
+            sectorArticle(month, type);
+            
+          }
+      }
+  }
+  
+  rawFile.send(null);
+
+}
 
 
 
@@ -448,6 +598,22 @@ function isScrolledIntoView(elem)
     return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 }
 
+function sliderBTN(type){
+  alert("g")
+    var carousel = new Carousel3D( document.getElementById('carousel') );
+    
+    if (type == "previous"){
+
+      var increment = -1;
+      carousel.rotation += carousel.theta * increment * -1;
+      carousel.transform();
+    }else{
+        var increment = 1;
+        carousel.rotation += carousel.theta * increment * -1;
+        carousel.transform();
+    }
+
+}
 
 function drawCanvas(){
 
@@ -668,3 +834,92 @@ var chart3 = new CanvasJS.Chart("chartContainer3",
   chart3.render();
 
   }
+
+
+
+
+
+
+
+
+
+  var transformProp = Modernizr.prefixed('transform');
+
+  function Carousel3D ( element ) {
+    this.element = element;
+
+    this.rotation = 0;
+    this.panelCount = 0;
+    this.totalPanelCount = this.element.children.length;
+    this.theta = 0;
+
+    this.isHorizontal = true;
+
+  }
+
+  Carousel3D.prototype.modify = function() {
+
+    var panel, angle, i;
+
+    this.panelSize = this.element[ this.isHorizontal ? 'offsetWidth' : 'offsetHeight' ];
+    this.rotateFn = this.isHorizontal ? 'rotateY' : 'rotateX';
+    this.theta = 360 / this.panelCount;
+
+    // 計算整體大小
+
+    this.radius = Math.round( ( this.panelSize / 2) / Math.tan( Math.PI / this.panelCount ) ) +500;
+
+    for ( i = 0; i < this.panelCount; i++ ) {
+      panel = this.element.children[i];
+      angle = this.theta * i;
+      panel.style.opacity = 1;
+      panel.style.backgroundColor = 'rgba(0,0,0, 0.8)';
+      // 旋轉
+
+      panel.style[ transformProp ] = this.rotateFn + '(' + angle + 'deg) translateZ(' + this.radius + 'px)';
+    }
+
+    // 隱藏其他圖片
+    for (  ; i < this.totalPanelCount; i++ ) {
+      panel = this.element.children[i];
+      panel.style.opacity = 0;
+      panel.style[ transformProp ] = 'none';
+    }
+
+    // adjust rotation so panels are always flat
+    this.rotation = Math.round( this.rotation / this.theta ) * this.theta;
+
+    this.transform();
+
+  };
+
+  Carousel3D.prototype.transform = function() {
+    // 旋轉
+    this.element.style[ transformProp ] = 'translateZ(-' + this.radius + 'px) ' + this.rotateFn + '(' + this.rotation + 'deg)';
+  };
+
+
+
+var sliderInit = function() {
+
+
+      var carousel = new Carousel3D( document.getElementById('carousel') );
+          //panelCountInput = document.getElementById('panel-count'),
+          //axisButton = document.getElementById('toggle-axis'),
+          //navButtons = document.querySelectorAll('#navigation button'),
+
+
+
+      setTimeout( function(){
+        document.body.addClassName('ready');
+      }, 0);
+
+      carousel.panelCount = 5;
+      carousel.modify();
+      
+
+};
+
+
+
+window.addEventListener( 'DOMContentLoaded', sliderInit, false);
