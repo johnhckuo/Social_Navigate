@@ -288,7 +288,7 @@ d3.select("svg").selectAll("path").on("mousedown", function() {
 
 function readTextFile(file)
 {
-    $("#LoadingImage").show();
+
     $("#bg").fadeOut(1000);
 
     var rawFile = new XMLHttpRequest();
@@ -364,7 +364,7 @@ function sectorArticle(month, type){
     return;
 
     }
-    $("#LoadingImage").show();
+    //$("#LoadingImage").show();
  
 
     var file = "data/"+type+"/"+month+"/"+fileArray[sectorCount]+".json";
