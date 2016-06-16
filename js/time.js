@@ -86,9 +86,9 @@ for (var i=0; i < 2; i++) {
 
 function accessLocation(){
   if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+      //navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
   } 
-  geocoder = new google.maps.Geocoder();
+  //geocoder = new google.maps.Geocoder();
 }
   
 //Get the latitude and the longitude;
