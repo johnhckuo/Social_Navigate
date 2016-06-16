@@ -16,6 +16,16 @@ var currentCity;
 var randomClickCount = 0;
 var lastCity = '';
 var chart1DataPoint = [];
+var chart2DataPoint = [];
+var chart3DataPoint = [];
+var chart4DataPoint = [];
+var chart5DataPoint = [];
+
+var food1DataPoint = [];
+var food2DataPoint = [];
+var food3DataPoint = [];
+var food4DataPoint = [];
+var food5DataPoint = [];
 $(document).ready(function(){
 
 $(".footer_time").hover(function(){
@@ -61,7 +71,7 @@ cloudFile.onreadystatechange = function ()
 cloudFile.send(null);
 
 
-drawCanvas();
+
 
 sectorArticle(currentMonth, typeArray[currentType])
 accessLocation();
@@ -81,6 +91,10 @@ var carousel = document.getElementById('carousel'),
 for (var i=0; i < 2; i++) {
   navButtons[i].addEventListener( 'click', onNavButtonClick, false);
 }
+
+
+dynamicDiagram(0, 1, "travel")
+dynamicDiagram(0, 1, "food")
 });
 
 
@@ -335,15 +349,15 @@ function sectorArticle(month, type){
               
               var temp = sectorArticleNumber[i]/parseFloat(total);
               if (temp>0.13)
-                color = 'purple';
+                color = '#F26419';
               else if (temp>0.09)
-                color = 'red';
+                color = '#F6AE2D';
               else if (temp>0.05)
-                color = 'orange';
+                color = '#55DDE0';
               else if (temp>0.01)
-                color = 'yellow';
+                color = '#33658A';
               else if (temp>0)
-                color = 'green' ;
+                color = '#2F4858' ;
               //   color = '#B2BD7E';
               // else if (temp>0.09)
               //   color = '#F6FEAA';
@@ -510,51 +524,140 @@ $("#articleContent").append(table);
 
 
 
-function dynamicDiagram(city){
-  if (city == dynamicArray.length-1){
-    if (month == 5){
+function dynamicDiagram(city, month, type){
+
+
+if (type == "travel"){
+  if (month == 6){
+    if (city == dynamicArray.length-1){
+      drawCanvas()
       return;
     }else{
-      month++;
-      city = 0;
+
+      city++;
+      month = 1;
+     
     }
  
   }
-
-  var file = "data/travel/"+month+"/"+dynamicArray[city]+".json";
-  
+  var file = "data/旅遊/"+month+"/"+dynamicArray[city]+".json";
   var rawFile = new XMLHttpRequest();
-        
-  rawFile.open("GET", file, true);
+      
+rawFile.open("GET", file, true);
 
-  rawFile.onreadystatechange = function ()
-  {
-      if(rawFile.readyState === 4)
-      {
+rawFile.onreadystatechange = function ()
+{
+    if(rawFile.readyState === 4)
+    {
 
-          if(rawFile.status === 200 || rawFile.status == 0)
-          {
-              var allText = rawFile.responseText;
-              //console.log(allText);
-              
-              
-
-              ajaxFile = JSON.parse(allText)
-              //console.log(ajaxFile[0])
-              //console.log(ajaxFile.length)
-              sectorArticleSector.push(fileArray[sectorCount]);
-              sectorArticleNumber.push(ajaxFile.length);
-
-              chart1DataPoint
-            sectorCount++;
-            city++;
-            sectorArticle(month, type);
+        if(rawFile.status === 200 || rawFile.status == 0)
+        {
+            var allText = rawFile.responseText;
+            //console.log(allText);
             
-          }
-      }
+            
+
+            ajaxFile = JSON.parse(allText)
+            //console.log(ajaxFile[0])
+            //console.log(ajaxFile.length)
+        
+          //              {x: new Date(2012, 7), y: 21000},
+          // {x: new Date(2012, 8), y: 22000},
+          // {x: new Date(2012, 9), y: 25000},
+          // {x: new Date(2012, 10), y: 23000},
+          // {x: new Date(2012, 11), y: 25000},
+          // {x: new Date(2013, 0), y: 26000},
+          // {x: new Date(2013, 1), y: 25000}
+          if (city == 0){
+
+            chart1DataPoint.push({x:month, y: ajaxFile.length})
+          }else if (city == 1){
+            chart2DataPoint.push({x:month, y: ajaxFile.length})
+
+          }else if (city == 2){
+            chart3DataPoint.push({x:month, y: ajaxFile.length})
+          }else if (city == 3){
+            chart4DataPoint.push({x:month, y: ajaxFile.length})
+          }else if (city == 4){
+            chart5DataPoint.push({x:month, y: ajaxFile.length})
+          }         
+          month++;
+          dynamicDiagram(city, month, type);
+ 
+          
+        }
+    }
+}
+
+rawFile.send(null);
+
+}else{
+
+  if (month == 6){
+    if (city == dynamicArray.length-1){
+      drawFoodCanvas()
+      return;
+    }else{
+
+      city++;
+      month = 1;
+     
+    }
+ 
   }
-  
-  rawFile.send(null);
+  var file = "data/美食/"+month+"/"+dynamicArray[city]+".json";
+  var rawFile = new XMLHttpRequest();
+      
+rawFile.open("GET", file, true);
+
+rawFile.onreadystatechange = function ()
+{
+    if(rawFile.readyState === 4)
+    {
+
+        if(rawFile.status === 200 || rawFile.status == 0)
+        {
+            var allText = rawFile.responseText;
+            //console.log(allText);
+            
+            
+
+            ajaxFile = JSON.parse(allText)
+            //console.log(ajaxFile[0])
+            //console.log(ajaxFile.length)
+        
+          //              {x: new Date(2012, 7), y: 21000},
+          // {x: new Date(2012, 8), y: 22000},
+          // {x: new Date(2012, 9), y: 25000},
+          // {x: new Date(2012, 10), y: 23000},
+          // {x: new Date(2012, 11), y: 25000},
+          // {x: new Date(2013, 0), y: 26000},
+          // {x: new Date(2013, 1), y: 25000}
+          if (city == 0){
+
+            food1DataPoint.push({x:month, y: ajaxFile.length})
+          }else if (city == 1){
+            food2DataPoint.push({x:month, y: ajaxFile.length})
+
+          }else if (city == 2){
+            food3DataPoint.push({x:month, y: ajaxFile.length})
+          }else if (city == 3){
+            food4DataPoint.push({x:month, y: ajaxFile.length})
+          }else if (city == 4){
+            food5DataPoint.push({x:month, y: ajaxFile.length})
+          }         
+          month++;
+          dynamicDiagram(city, month, type);
+ 
+          
+        }
+    }
+}
+
+rawFile.send(null);
+
+}
+
 
 }
 
@@ -617,93 +720,31 @@ function sliderBTN(type){
 
 function drawCanvas(){
 
-    var chart1 = new CanvasJS.Chart("chartContainer",
-    {
-      zoomEnabled: true,
-      animationEnabled: true,
-      title:{
-        text: "各地區關鍵字分布頻率",
-        fontFamily: "微軟正黑體"         
-
-      },
-      axisX: {
-        title:"地區",
-        gridThickness: 1,
-  tickThickness: 1,
-        gridColor: "lightgrey",
-        tickColor: "lightgrey",
-        lineThickness: 0,
-        fontFamily: "微軟正黑體" 
-      },
-      axisY:{
-        title: "Rail Lines(total route-km)",              
-        gridThickness: 1,
-  tickThickness: 1,
-        gridColor: "lightgrey",
-        tickColor: "lightgrey",
-        lineThickness: 0,
-        valueFormatString:"#,##0k,.",
-        maximum: 250000,
-        interval: 50000,
-        labelFontFamily: "微軟正黑體" 
-        
-      },
-      backgroundColor: "transparent",
-      data: [
-      {        
-        type: "bubble",     
-        toolTipContent: "<span style='\"'color: {color};'\"'><strong>{label}</strong></span><br/> <strong>Land Area</strong> {x} mn sq. km <br/> <strong>Rail Road</strong> {y} km<br/> <strong>Population</strong> {z} mn",
-        dataPoints: [
-        { x: 9.14, y: 228513, z:309.34,  label:"US" },
-        { x: 16.37, y: 85292, z:141.92,  label:"Russia" },
-        { x: 9.327, y: 66239, z:1337,  label:"China" },
-        { x: 9.09, y: 58345, z:34.12,  label:"Canada" },
-        { x: 8.45, y: 29817, z:194.94,  label:"Brazil" },
-        { x: 7.68, y: 8615, z:22.29,  label:"Australia" },
-        { x: 2.97, y: 63974, z:1224.61,  label:"India" },
-        { x: 2.73, y: 25023, z:40.41,  label:"Argentina" },
-        { x: 1.94, y: 26704, z:113.42,  label:"Mexico" },
-        { x: 1.21, y: 22051, z:49.99,  label:"SA" },
-        { x: .547, y: 33608, z:65.07,  label:"France" },
-        { x: .241, y: 31471, z:62.23,  label:"U.K" },
-        { x: .348, y: 33708, z:81.77,  label:"Germany" },
-        { x: .364, y: 20035, z:127.45,  label:"Japan" },
-        { x: .995, y: 5195, z:81.12,  label:"Egypt" },
-        { x: .743, y: 5352, z:17.11,  label:"Chile" }
-        
-
-        ]
-      }
-      ]
-    });
-
-
-
-    chart1.render();
-
-
-
-
-
+ 
 
 
 
 var chart2 = new CanvasJS.Chart("chartContainer2",
     {      
         title:{
-            text: "各縣市討論聲量曲線圖",
+            text: "各縣市「旅遊」貼文討論曲線圖",
           fontFamily: "微軟正黑體" 
         },
         animationEnabled: true,
         axisY :{
             includeZero: false,
-            prefix: "$ ",
-          labelFontFamily: "微軟正黑體" 
+          labelFontFamily: "微軟正黑體",
+          labelFontColor: "black"
         },
         toolTip: {
             shared: true,
-            content: "<span style='\"'color: {color};'\"'><strong>{name}</strong></span> <span style='\"'color: dimgrey;'\"'>${y}</span> ",
+            content: "<span style='\"'color: {color};'\"'><strong>{name}</strong></span> <span style='\"'color: dimgrey;'\"'>{y}篇</span> ",
           labelFontFamily: "微軟正黑體" 
+        },
+        axisX:{
+          interval: 1,
+          suffix: " 月份",
+          labelFontColor: "black"
         },
         legend: {
             fontSize: 13
@@ -711,89 +752,40 @@ var chart2 = new CanvasJS.Chart("chartContainer2",
         backgroundColor: "transparent",
         data: [
         {        
-            type: "splineArea", 
+            type: "stackedArea", 
             showInLegend: true,
-            name: "Salaries",
+            name: dynamicArray[0],
             color: "rgba(54,158,173,.6)",
-            dataPoints: [
-            {x: new Date(2012, 2), y: 30000},
-            {x: new Date(2012, 3), y: 35000},
-            {x: new Date(2012, 4), y: 30000},
-            {x: new Date(2012, 5), y: 30400},
-            {x: new Date(2012, 6), y: 20900},
-            {x: new Date(2012, 7), y: 31000},
-            {x: new Date(2012, 8), y: 30200},
-            {x: new Date(2012, 9), y: 30000},
-            {x: new Date(2012, 10), y: 33000},
-            {x: new Date(2012, 11), y: 38000},
-            {x: new Date(2013, 0),  y: 38900},
-            {x: new Date(2013, 1),  y: 39000}
-
-            ]
+            dataPoints: chart1DataPoint
         },
         {        
-            type: "splineArea", 
+            type: "stackedArea", 
             showInLegend: true,
-            name: "Office Cost",        
+            name: dynamicArray[1],        
             color: "rgba(134,180,2,.7)",
-            dataPoints: [
-            {x: new Date(2012, 2), y: 20100},
-            {x: new Date(2012, 3), y: 16000},
-            {x: new Date(2012, 4), y: 14000},
-            {x: new Date(2012, 5), y: 18000},
-            {x: new Date(2012, 6), y: 18000},
-            {x: new Date(2012, 7), y: 21000},
-            {x: new Date(2012, 8), y: 22000},
-            {x: new Date(2012, 9), y: 25000},
-            {x: new Date(2012, 10), y: 23000},
-            {x: new Date(2012, 11), y: 25000},
-            {x: new Date(2013, 0), y: 26000},
-            {x: new Date(2013, 1), y: 25000}
-
-            ]
+            dataPoints: chart2DataPoint
         },
         {        
-            type: "splineArea", 
+            type: "stackedArea", 
             showInLegend: true,
-            name: "Entertainment",
+            name: dynamicArray[2],
             color: "rgba(194,70,66,.6)",        
-            dataPoints: [
-            {x: new Date(2012, 2), y: 10100},
-            {x: new Date(2012, 3), y: 6000},
-            {x: new Date(2012, 4), y: 3400},
-            {x: new Date(2012, 5), y: 4000},
-            {x: new Date(2012, 6), y: 9000},
-            {x: new Date(2012, 7), y: 3900},
-            {x: new Date(2012, 8), y: 4200},
-            {x: new Date(2012, 9), y: 5000},
-            {x: new Date(2012, 10), y: 14300},
-            {x: new Date(2012, 11), y: 12300},
-            {x: new Date(2013, 0), y: 8300},
-            {x: new Date(2013, 1), y: 6300}
-
-            ]
+            dataPoints: chart3DataPoint
         },
         {        
-            type: "splineArea", 
+            type: "stackedArea", 
             showInLegend: true,
             color: "rgba(127,96,132,.6)",        
-            name: "Maintenance",
-            dataPoints: [
-            {x: new Date(2012, 2), y: 1700},
-            {x: new Date(2012, 3), y: 2600},
-            {x: new Date(2012, 4), y: 1000},
-            {x: new Date(2012, 5), y: 1400},
-            {x: new Date(2012, 6), y: 900},
-            {x: new Date(2012, 7), y: 1000},
-            {x: new Date(2012, 8), y: 1200},
-            {x: new Date(2012, 9), y: 5000},
-            {x: new Date(2012, 10), y: 1300},
-            {x: new Date(2012, 11), y: 2300},
-            {x: new Date(2013, 0), y: 2800},
-            {x: new Date(2013, 1), y: 1300}
-
-            ]
-        }      
+            name: dynamicArray[3],
+            dataPoints: chart4DataPoint
+        },
+        {        
+            type: "stackedArea", 
+            showInLegend: true,
+            color: "rgba(255,0,0,.6)",        
+            name: dynamicArray[4],
+            dataPoints: chart5DataPoint
+        }  
 
         ]
     });
@@ -804,41 +796,78 @@ var chart2 = new CanvasJS.Chart("chartContainer2",
 
 
 
-var chart3 = new CanvasJS.Chart("chartContainer3",
-  {
-    title:{
-      text: "各地區討論聲量比例",
-      verticalAlign: 'top',
-      horizontalAlign: 'left',
-      fontFamily: "微軟正黑體" 
-    },
-    animationEnabled: true,
-    backgroundColor: "transparent",
-    data: [
-    {        
-      type: "doughnut",
-      startAngle:20,
-      toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
-      indexLabel: "{label} #percent%",
-
-      dataPoints: [
-        {  y: 67, label: "Inbox" },
-        {  y: 28, label: "Archives" },
-        {  y: 10, label: "Labels" },
-        {  y: 7,  label: "Drafts"},
-        {  y: 4,  label: "Trash"}
-      ]
-    }
-    ]
-  });
-  chart3.render();
-
   }
 
 
+function drawFoodCanvas(){
+  var chart1 = new CanvasJS.Chart("chartContainer",
+    {      
+        title:{
+            text: "各縣市「美食」貼文討論曲線圖",
+          fontFamily: "微軟正黑體" 
+        },
+        animationEnabled: true,
+        axisY :{
+            includeZero: false,
+          labelFontFamily: "微軟正黑體",
+          labelFontColor: "black"
+        },
+        toolTip: {
+            shared: true,
+            content: "<span style='\"'color: {color};'\"'><strong>{name}</strong></span> <span style='\"'color: dimgrey;'\"'>{y}篇</span> ",
+          labelFontFamily: "微軟正黑體" 
+        },
+        axisX:{
+          interval: 1,
+          suffix: " 月份",
+          labelFontColor: "black"
+        },
+        legend: {
+            fontSize: 13
+        },
+        backgroundColor: "transparent",
+        data: [
+        {        
+            type: "stackedArea", 
+            showInLegend: true,
+            name: dynamicArray[0],
+            color: "rgba(54,158,173,.6)",
+            dataPoints: food1DataPoint
+        },
+        {        
+            type: "stackedArea", 
+            showInLegend: true,
+            name: dynamicArray[1],        
+            color: "rgba(134,180,2,.7)",
+            dataPoints: food2DataPoint
+        },
+        {        
+            type: "stackedArea", 
+            showInLegend: true,
+            name: dynamicArray[2],
+            color: "rgba(194,70,66,.6)",        
+            dataPoints: food3DataPoint
+        },
+        {        
+            type: "stackedArea", 
+            showInLegend: true,
+            color: "rgba(127,96,132,.6)",        
+            name: dynamicArray[3],
+            dataPoints: food4DataPoint
+        },
+        {        
+            type: "stackedArea", 
+            showInLegend: true,
+            color: "rgba(255,0,0,.6)",        
+            name: dynamicArray[4],
+            dataPoints: food5DataPoint
+        }  
 
+        ]
+    });
 
-
+  chart1.render();
+}
 
 
 
